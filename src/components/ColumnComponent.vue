@@ -4,6 +4,7 @@ import { ref, watch } from 'vue'
 import { VueDraggable } from 'vue-draggable-plus'
 
 const props = defineProps(['todos', 'columnName'])
+// const emit = defineEmits(['updateStatus'])
 
 const localTodos = ref([])
 
@@ -18,7 +19,8 @@ watch(
 const findHeading = (ele) => {
   return ele.parentNode.firstChild.innerText
 }
-const onDragEnd = (e) => {
+
+const onAdd = async (e) => {
   const fromStatus = findHeading(e.from)
   const toStatus = findHeading(e.to)
   if (fromStatus != toStatus) {
@@ -27,13 +29,37 @@ const onDragEnd = (e) => {
       ...e.clonedData,
       status: toStatus
     }
-    fetch(`/api/todos/${id}`, {
+
+    const response = await fetch(`/api/todos/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(data)
     })
+
+    if (response.ok) {
+      localTodos.value.forEach((todo) => {
+        if (todo.id == id) {
+          todo.status = toStatus
+        }
+      })
+    }
+  }
+}
+
+const handleDeleteTodo = async (todo) => {
+  try {
+    const response = await fetch(`/api/todos/${todo.id}`, {
+      method: 'DELETE'
+    })
+    if (response.ok) {
+      localTodos.value = localTodos.value.filter((t) => t.id !== todo.id)
+    } else {
+      throw new Error('Failed to delete todo')
+    }
+  } catch (error) {
+    console.error('Failed to delete todo:', error)
   }
 }
 </script>
@@ -41,16 +67,21 @@ const onDragEnd = (e) => {
 <template>
   <div class="flex flex-col gap-2 bg-slate-100 p-2">
     <div class="text-xl text-slate-600">{{ columnName }}</div>
-    <pre>{{ localTodos }}</pre>
+    <!-- <pre>{{ localTodos }}</pre> -->
     <VueDraggable
       ref="el"
       v-model="localTodos"
       group="statuses"
       class="flex flex-col gap-2"
       ghost-class="ghost"
-      @end="(e) => onDragEnd(e)"
+      @add="(e) => onAdd(e)"
     >
-      <TodoComponent v-for="todo in localTodos" :key="todo.id" :todo="todo" />
+      <TodoComponent
+        v-for="todo in localTodos"
+        :key="todo.id"
+        :todo="todo"
+        @deleteTodo="handleDeleteTodo"
+      />
     </VueDraggable>
   </div>
 </template>

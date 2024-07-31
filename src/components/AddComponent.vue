@@ -6,12 +6,14 @@ const todo = reactive({
   task: ''
 })
 
+const emit = defineEmits(['addTodo'])
+
 const addTodo = async () => {
   const data = {
     task: todo.task,
     status: todo.status
   }
-  await fetch('/api/todos', {
+  const response = await fetch('/api/todos', {
     method: 'POST',
     body: JSON.stringify(data),
     headers: {
@@ -19,10 +21,10 @@ const addTodo = async () => {
     }
   })
   // console.log(response.status)
-  // if (response.status == 201) {
-  //   console.log('respoinse is ok')
-  //   await fetchTodos()
-  // }
+  if (response.status == 201) {
+    const responseBody = await response.json()
+    emit('addTodo', responseBody.data)
+  }
 }
 </script>
 
