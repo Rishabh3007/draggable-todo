@@ -62,6 +62,34 @@ const handleDeleteTodo = async (todo) => {
     console.error('Failed to delete todo:', error)
   }
 }
+
+const handleUpdateTodo = async (todo, newTask) => {
+  // console.log(todo, newTask)
+  try {
+    const response = await fetch(`/api/todos/${todo.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        ...todo,
+        task: newTask
+      })
+    })
+
+    if (response.ok) {
+      localTodos.value.forEach((t) => {
+        if (t.id === todo.id) {
+          t.task = newTask
+        }
+      })
+    } else {
+      throw new Error('Failed to update todo')
+    }
+  } catch (error) {
+    console.error('Error updating todo:', error)
+  }
+}
 </script>
 
 <template>
@@ -81,13 +109,16 @@ const handleDeleteTodo = async (todo) => {
         :key="todo.id"
         :todo="todo"
         @deleteTodo="handleDeleteTodo"
+        @updateTodo="handleUpdateTodo"
       />
     </VueDraggable>
   </div>
 </template>
 
 <style scoped>
-/* .ghost {
-  opacity: 0;
-} */
+.ghost {
+  opacity: 0.2;
+  background-color: rgb(126, 126, 126);
+  color: rgb(126, 126, 126);
+}
 </style>
