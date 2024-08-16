@@ -9,7 +9,9 @@ const filteredTodos = ref({})
 
 const fetchTodos = async () => {
   try {
-    const response = await fetch('/api/todos')
+    const response = await fetch('https://todo-worker.rishabh-aa6.workers.dev/todos', {
+      credentials: 'include'
+    })
     // console.log('response', response.status)
     if (response.status !== 200) {
       throw new Error('Network response was not ok')
@@ -36,7 +38,7 @@ const handleAddTodo = (newTodo) => {
 
 const handleLogout = async () => {
   try {
-    const response = await fetch('/api/auth/logout', {
+    const response = await fetch('https://todo-worker.rishabh-aa6.workers.dev/auth/logout', {
       method: 'POST'
     })
     // console.log(response.status)

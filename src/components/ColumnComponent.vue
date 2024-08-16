@@ -30,7 +30,7 @@ const onAdd = async (e) => {
       status: toStatus
     }
 
-    const response = await fetch(`/api/todos/${id}`, {
+    const response = await fetch(`https://todo-worker.rishabh-aa6.workers.dev/todos/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -50,7 +50,7 @@ const onAdd = async (e) => {
 
 const handleDeleteTodo = async (todo) => {
   try {
-    const response = await fetch(`/api/todos/${todo.id}`, {
+    const response = await fetch(`https://todo-worker.rishabh-aa6.workers.dev/todos/${todo.id}`, {
       method: 'DELETE'
     })
     if (response.ok) {
@@ -66,7 +66,7 @@ const handleDeleteTodo = async (todo) => {
 const handleUpdateTodo = async (todo, newTask) => {
   // console.log(todo, newTask)
   try {
-    const response = await fetch(`/api/todos/${todo.id}`, {
+    const response = await fetch(`https://todo-worker.rishabh-aa6.workers.dev/todos/${todo.id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'

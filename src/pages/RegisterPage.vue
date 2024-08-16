@@ -23,7 +23,7 @@ const register = async () => {
     password: password.value
   }
 
-  const response = await fetch('/api/auth/register', {
+  const response = await fetch('https://todo-worker.rishabh-aa6.workers.dev/auth/register', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'

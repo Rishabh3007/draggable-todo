@@ -21,7 +21,7 @@ const login = async () => {
     password: password.value
   }
 
-  const response = await fetch('/api/auth/login', {
+  const response = await fetch('https://todo-worker.rishabh-aa6.workers.dev/auth/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'

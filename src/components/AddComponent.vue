@@ -13,7 +13,7 @@ const addTodo = async () => {
     task: todo.task,
     status: todo.status
   }
-  const response = await fetch('/api/todos', {
+  const response = await fetch('https://todo-worker.rishabh-aa6.workers.dev/todos', {
     method: 'POST',
     body: JSON.stringify(data),
     headers: {
