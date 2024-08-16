@@ -2,7 +2,7 @@
 import { computed, defineProps, ref, watch, nextTick, onMounted } from 'vue'
 
 const props = defineProps(['todo'])
-const emit = defineEmits(['updateTodo'])
+const emit = defineEmits(['updateTodo', 'deleteTodo'])
 
 const isEditMode = ref(false)
 const inputRef = ref(null)

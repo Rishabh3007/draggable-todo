@@ -10,7 +10,8 @@ const filteredTodos = ref({})
 const fetchTodos = async () => {
   try {
     const response = await fetch('/api/todos')
-    if (!response.ok) {
+    // console.log('response', response.status)
+    if (response.status !== 200) {
       throw new Error('Network response was not ok')
     } else if (response.status == 200) {
       const todosData = await response.json()
@@ -31,6 +32,20 @@ const handleAddTodo = (newTodo) => {
   filteredTodos.value[newTodo.status] = [...filteredTodos.value[newTodo.status]]
 
   console.log('Updated filteredTodos:', filteredTodos.value)
+}
+
+const handleLogout = async () => {
+  try {
+    const response = await fetch('/api/auth/logout', {
+      method: 'POST'
+    })
+    // console.log(response.status)
+    if (response.status == 200) {
+      router.push('/login')
+    }
+  } catch (error) {
+    console.error('Error logging out:', error)
+  }
 }
 
 onMounted(async () => {
@@ -56,8 +71,12 @@ onMounted(async () => {
       <div>
         <h1 class="text-3xl text-slate-600">My Todo's</h1>
       </div>
-
-      <AddComponent @addTodo="handleAddTodo" />
+      <div class="flex gap-3">
+        <AddComponent @addTodo="handleAddTodo" />
+        <button @click="handleLogout" class="rounded-md bg-red-300 px-4 hover:bg-red-400">
+          Logout
+        </button>
+      </div>
     </div>
 
     <div class="grid grid-cols-4 gap-5 p-3">
